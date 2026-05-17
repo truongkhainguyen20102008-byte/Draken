@@ -493,9 +493,7 @@ async def on_ready():
     bot.add_view(ControlView())
     bot.add_view(VerifyView())
     await bot.tree.sync()
-    await bot.change_presence(
-        activity=discord.Activity(type=discord.ActivityType.watching, name="Tickets")
-    )
+    await bot.change_presence(status=discord.Status.online)
     log.info(
         "Logged In As %s  |  Guilds: %d  |  Owner ID: %d",
         bot.user, len(bot.guilds), OWNER_ID,
