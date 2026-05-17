@@ -65,7 +65,6 @@ TICKET_CATEGORIES = {
 
 S = {
     "panel_title":            "Support Center",
-    "panel_desc":             "Welcome To The Support Center!\nSelect A Category Below To Open A Ticket And Our Team Will Respond Shortly.",
     "panel_categories_title": "### Available Categories",
     "panel_placeholder":      "Select A Ticket Category...",
     "modal_title":            "Create A Support Ticket",
@@ -495,7 +494,7 @@ async def on_ready():
     bot.add_view(VerifyView())
     await bot.tree.sync()
     await bot.change_presence(
-        activity=discord.Activity(type=discord.ActivityType.watching, name="/help")
+        activity=discord.Activity(type=discord.ActivityType.watching, name="Tickets")
     )
     log.info(
         "Logged In As %s  |  Guilds: %d  |  Owner ID: %d",
@@ -1600,18 +1599,6 @@ async def owner_reset_guild(interaction: discord.Interaction, guild_id: str):
         )
 
 
-@owner_grp.command(name="set_activity", description="Change The Bot's Status Message")
-@app_commands.describe(text="Status Text To Display")
-@is_owner()
-async def owner_set_activity(interaction: discord.Interaction, text: str):
-    await bot.change_presence(
-        activity=discord.Activity(type=discord.ActivityType.watching, name=text)
-    )
-    await interaction.response.send_message(
-        f"Activity Updated To: **{text}**", ephemeral=True
-    )
-
-
 @owner_grp.command(name="close_all", description="Force Close All Open Tickets In This Server")
 @is_owner()
 async def owner_close_all(interaction: discord.Interaction):
@@ -1638,56 +1625,6 @@ async def owner_close_all(interaction: discord.Interaction):
 
 
 bot.tree.add_command(owner_grp)
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-#  /help Command
-# ═══════════════════════════════════════════════════════════════════════════════
-
-@bot.tree.command(name="help", description="View All Available Bot Commands")
-@is_owner()
-async def cmd_help(interaction: discord.Interaction):
-    ticket_cmds = (
-        "`/ticket setup`  —  Configure The Ticket System\n"
-        "`/ticket panel`  —  Send The Ticket Panel To A Channel\n"
-        "`/ticket add`    —  Add A User To A Ticket\n"
-        "`/ticket remove` —  Remove A User From A Ticket\n"
-        "`/ticket list`   —  View All Open Tickets\n"
-        "`/ticket delete` —  Force Delete A Ticket Channel"
-    )
-    welcome_cmds = (
-        "`/welcome setup` —  Configure The Welcome Message System"
-    )
-    verify_cmds = (
-        "`/verify setup`   —  Set The Verification Channel\n"
-        "`/verify enable`  —  Enable Verification & Auto Unverified Role\n"
-        "`/verify panel`   —  Send The Verify Panel To The Verify Channel\n"
-        "`/verify update`  —  Re-Apply Channel Locks After Adding New Channels\n"
-        "`/verify disable` —  Disable Verification & Remove All Channel Locks"
-    )
-    owner_cmds = (
-        "`/owner status`       —  View Bot Statistics\n"
-        "`/owner guilds`       —  List All Servers Using This Bot\n"
-        "`/owner broadcast`    —  Send Announcement To All Servers\n"
-        "`/owner set_activity` —  Change Bot Status Message\n"
-        "`/owner reset_guild`  —  Reset Ticket Data For A Server\n"
-        "`/owner close_all`    —  Force Close All Tickets In This Server"
-    )
-
-    await _v2_respond(interaction, [
-        _container(
-            _text("## Command Help"),
-            _separator(),
-            _text("**Ticket Commands**\n" + ticket_cmds),
-            _separator(),
-            _text("**Welcome Commands**\n" + welcome_cmds),
-            _separator(),
-            _text("**Verification Commands**\n" + verify_cmds),
-            _separator(),
-            _text("**Owner Commands**\n" + owner_cmds),
-        )
-    ])
-
 
 # ═══════════════════════════════════════════════════════════════════════════════
 #  Error Handler
